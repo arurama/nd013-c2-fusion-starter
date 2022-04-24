@@ -68,7 +68,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.batch_size = 1
         configs.peak_thresh = 0.5
         configs.conf_thresh = configs.peak_thresh # NOTE: there seems to be some confusion on the name of this variable
-
+        
         configs.pin_memory = True
 
         configs.num_samples = None
@@ -87,6 +87,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_z = 1
         configs.num_dim = 3
         configs.num_direction = 2  # sin, cos
+        configs.heads = {'hm_cen': configs.num_classes, 'cen_offset': configs.num_center_offset, 'direction': configs.num_direction, 'z_coor': configs.num_z,'dim': configs.num_dim}
         #######
         ####### ID_S3_EX1-3 END #######     
 
@@ -210,7 +211,7 @@ def detect_objects(input_bev_maps, model, configs):
                 K=configs.K,
             )
             detections = detections.cpu().numpy().astype(np.float32)
-			VEHICLE_CLASS = 1
+            VEHICLE_CLASS = 1
             detections = post_processing(detections, configs)[0][VEHICLE_CLASS]
 
             #######

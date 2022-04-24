@@ -13,7 +13,7 @@
 # general package imports
 import numpy as np
 import matplotlib
-matplotlib.use('wxagg') # change backend so that figure maximizing works on Mac as well     
+#matplotlib.use('wxagg') # change backend so that figure maximizing works on Mac as well     
 import matplotlib.pyplot as plt
 
 import torch
@@ -172,7 +172,7 @@ def compute_performance_stats(det_performance_all):
     # plot results
     data = [precision, recall, ious_all, devs_x_all, devs_y_all, devs_z_all]
     titles = ['detection precision', 'detection recall', 'intersection over union', 'position errors in X', 'position errors in Y', 'position error in Z']
-    textboxes = [f"precision: {precision:.02f}", f"recall: {recall:.02f}",
+    textboxes = ['', '', '',
                  '\n'.join((r'$\mathrm{mean}=%.4f$' % (np.mean(devs_x_all), ), r'$\mathrm{sigma}=%.4f$' % (np.std(devs_x_all), ), r'$\mathrm{n}=%.0f$' % (len(devs_x_all), ))),
                  '\n'.join((r'$\mathrm{mean}=%.4f$' % (np.mean(devs_y_all), ), r'$\mathrm{sigma}=%.4f$' % (np.std(devs_y_all), ), r'$\mathrm{n}=%.0f$' % (len(devs_x_all), ))),
                  '\n'.join((r'$\mathrm{mean}=%.4f$' % (np.mean(devs_z_all), ), r'$\mathrm{sigma}=%.4f$' % (np.std(devs_z_all), ), r'$\mathrm{n}=%.0f$' % (len(devs_x_all), )))]
