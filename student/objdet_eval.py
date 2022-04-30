@@ -60,7 +60,7 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             ## step 2 : loop over all detected objects
             for detection in detections:
                 ## step 3 : extract the four corners of the current detection
-                id_d, x_d, y_d, z_d, h_d, w_d, l_d, yaw_d = detection
+                Class_id_d, x_d, y_d, z_d, h_d, w_d, l_d, yaw_d = detection
                 detection_corners = tools.compute_box_corners(x_d, y_d, w_d, l_d, yaw_d)
                 
                 ## step 4 : computer the center distance between label and detection bounding-box in x, y, and z
@@ -130,8 +130,9 @@ def compute_performance_stats(det_performance_all):
 
     ## step 1 : extract the total number of positives, true positives, false negatives and false positives
     pos_negs = np.array(pos_negs)
-    _, tp, fn, fp = pos_negs.sum(axis=0)
-    
+    tp=sum(pos_negs[:,1])
+    fn=sum(pos_negs[:,2])
+    fp=sum(pos_negs[:,3])
     ## step 2 : compute precision
     precision = tp / (tp + fp)
 

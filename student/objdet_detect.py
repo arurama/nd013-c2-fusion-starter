@@ -202,14 +202,8 @@ def detect_objects(input_bev_maps, model, configs):
             print("student task ID_S3_EX1-5")
             outputs["hm_cen"] = _sigmoid(outputs["hm_cen"])
             outputs["cen_offset"] = _sigmoid(outputs["cen_offset"])
-            detections = decode(
-                outputs["hm_cen"],
-                outputs["cen_offset"],
-                outputs["direction"],
-                outputs["z_coor"],
-                outputs["dim"],
-                K=configs.K,
-            )
+            detections = decode(outputs["hm_cen"],outputs["cen_offset"], outputs["direction"],outputs["z_coor"],
+                outputs["dim"],K=configs.K)
             detections = detections.cpu().numpy().astype(np.float32)
             VEHICLE_CLASS = 1
             detections = post_processing(detections, configs)[0][VEHICLE_CLASS]
@@ -230,20 +224,19 @@ def detect_objects(input_bev_maps, model, configs):
         ## step 2 : loop over all detections
         for det in detections:
             ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
-            class_type, x, y, z, h, w, l, yaw = det
-            yaw = -yaw
+            class_typeid, bevx, bevy, z, h, bevw, bevl, yaw = det
 
             bound_size_x = configs.lim_x[1] - configs.lim_x[0]
             bound_size_y = configs.lim_y[1] - configs.lim_y[0]
 
-            y = y / configs.bev_height * bound_size_x + configs.lim_x[0]
-            x = x / configs.bev_width * bound_size_y + configs.lim_y[0]
-            z = z + configs.lim_z[0]
-            w = w / configs.bev_width * bound_size_y
-            l = l / configs.bev_height * bound_size_x
+            y = bevy / configs.bev_height * bound_size_x + configs.lim_x[0]
+            x = bevx / configs.bev_width * bound_size_y + configs.lim_y[0]
+
+            w = bevw / configs.bev_width * bound_size_y
+            l = bevl / configs.bev_height * bound_size_x
 
             ## step 4 : append the current object to the 'objects' array
-            objects.append([class_type, y, x, z, h, w, l, yaw])
+            objects.append([class_typeid, y, x, z, h, w, l, -yaw])
     #######
     ####### ID_S3_EX2 START #######   
     
