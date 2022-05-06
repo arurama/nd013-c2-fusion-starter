@@ -24,14 +24,15 @@ import misc.params as params
 class Filter:
     '''Kalman filter class'''
     def __init__(self):
+	
         pass
 
     def F(self):
         ############
         # TODO Step 1: implement and return system matrix F
         ############
-		dt = params.dt
-		F = np.matrix(
+        dt = params.dt
+        F = np.matrix(
             [
                 [1, 0, 0, dt, 0, 0],
                 [0, 1, 0, 0, dt, 0],
@@ -52,9 +53,9 @@ class Filter:
         ############
         # TODO Step 1: implement and return process noise covariance Q
         ############
-		
-		lin = params.q * params.dt
-		sq  =  ((params.dt ** 2 ) / 2) * params.q
+
+        lin = params.q * params.dt
+        sq  =  ((params.dt ** 2 ) / 2) * params.q
         cu = ((params.dt ** 3 ) / 3) * params.q
         
 
@@ -100,9 +101,8 @@ class Filter:
         P = (I - K * H) * track.P
         track.set_x(x)
         track.set_P(P)
-        track.update_attributes(meas)		
+        track.update_attributes(meas)
 
-		
         ############
         # END student code
         ############ 
@@ -124,9 +124,9 @@ class Filter:
         ############
         # TODO Step 1: calculate and return covariance of residual S
         ############
-		
+
         S = H * track.P * H.T + meas.R
-		return S
+        return S
 
         ############
         # END student code

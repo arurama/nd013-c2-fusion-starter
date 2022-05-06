@@ -47,9 +47,19 @@ class Sensor:
         # TODO Step 4: implement a function that returns True if x lies in the sensor's field of view, 
         # otherwise False.
         ############
-
-        return True
+        pos_veh = np.ones((4, 1))
+        pos_veh[0:3] = x[0:3]
         
+        pos_sens = self.veh_to_sens * pos_veh 
+
+        px = pos_sens[0]
+        py = pos_sens[1] 
+        if px > 0:
+            alpha = np.arctan2(py, px)
+            if alpha > self.fov[0] and alpha < self.fov[1]:
+                return True
+        
+        return False
         ############
         # END student code
         ############ 
@@ -70,8 +80,19 @@ class Sensor:
             # - make sure to not divide by zero, raise an error if needed
             # - return h(x)
             ############
+            pos_veh = np.ones((4, 1))
+            pos_veh[0:3] = x[0:3]
+			
+            pos_sens = self.veh_to_sens * pos_veh
+			
+            hx = np.zeros((2, 1))
 
-            pass
+            if pos_sens[0] == 0:
+                raise NameError("Error : Divide by 0")
+ 
+            hx[0, 0] = self.c_i - self.f_i * pos_sens[1] / pos_sens[0]
+            hx[1, 0] = self.c_j - self.f_j * pos_sens[2] / pos_sens[0]
+            return hx
         
             ############
             # END student code
@@ -115,9 +136,9 @@ class Sensor:
         # TODO Step 4: remove restriction to lidar in order to include camera as well
         ############
         
-        if self.name == 'lidar':
-            meas = Measurement(num_frame, z, self)
-            meas_list.append(meas)
+        
+        meas = Measurement(num_frame, z, self)
+        meas_list.append(meas)
         return meas_list
         
         ############
@@ -155,9 +176,17 @@ class Measurement:
             ############
             # TODO Step 4: initialize camera measurement including z and R 
             ############
-
-            pass
-        
+            self.z = np.zeros((sensor.dim_meas, 1))           
+            self.z[0] = z[0]
+            self.z[1] = z[1]
+            cam_i = params.sigma_cam_i ** 2
+            cam_j = params.sigma_cam_j ** 2
+            self.R = np.matrix(
+                [
+                    [cam_i,    0],
+                    [0,    cam_j],
+                ]
+            )
             ############
             # END student code
             ############ 
