@@ -37,13 +37,9 @@ class Association:
         # - replace association_matrix with the actual association matrix based on Mahalanobis distance (see below) for all tracks and all measurements
         # - update list of unassigned measurements and unassigned tracks
         ############
-        
-        #self.association_matrix = np.inf * np.ones((len(track_list), len(meas_list)))
-        #self.unassigned_tracks = list(range(len(track_list)))  # reset lists
-        #self.unassigned_meas = list(range(len(meas_list)))
-
-        self.association_matrix = np.ones((len(track_list), len(meas_list))) * np.inf # reset matrix
-        self.unassigned_tracks = list(range(len(track_list))) # reset lists
+        # reset matrix
+        self.association_matrix = np.ones((len(track_list), len(meas_list))) * np.inf 
+        self.unassigned_tracks = list(range(len(track_list))) 
         self.unassigned_meas = list(range(len(meas_list)))
         
         for tid, tra in enumerate(track_list):
