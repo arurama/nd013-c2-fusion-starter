@@ -11,13 +11,17 @@
 #
 
 # imports
+from typing import List
 import numpy as np
 import collections
 
 # add project directory to python path to enable relative imports
 import os
 import sys
-PACKAGE_PARENT = '..'
+
+from student.measurements import Measurement
+
+PACKAGE_PARENT = ".."
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 import misc.params as params 
@@ -151,7 +155,7 @@ class Trackmanagement:
         track.score += (1.0 / params.window)
         if track.score >= params.confirmed_threshold:
             track.state = 'confirmed'
-        else:
+        elif track.score >= params.delete_threshold:
             track.state = 'tentative'
         ############
         # END student code
