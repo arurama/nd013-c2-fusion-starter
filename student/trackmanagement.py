@@ -117,6 +117,9 @@ class Trackmanagement:
             if meas_list: # if not empty
                 if meas_list[0].sensor.in_fov(track.x):
                     # your code goes here
+					track.state='tentative'
+					if track.score > params.delete_threshold + 1:
+                        track.score = params.delete_threshold + 1
                     track.score -= (1.0 / params.window)
         # delete old tracks   
         for track in self.track_list:
