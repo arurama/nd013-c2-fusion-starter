@@ -54,11 +54,12 @@ class Sensor:
 
         px = pos_sens[0]
         py = pos_sens[1] 
-        if px > 0:
-            alpha = np.arctan2(py, px)
-            if alpha > self.fov[0] and alpha < self.fov[1]:
-                return True
         
+        
+        if pos_sens[0] > 0: 
+            alpha = np.arctan(py, px)
+            if alpha >= self.fov[0] and alpha <= self.fov[1]:
+                return True
         return False
         ############
         # END student code
@@ -82,9 +83,9 @@ class Sensor:
             ############
             pos_veh = np.ones((4, 1))
             pos_veh[0:3] = x[0:3]
-			
+
             pos_sens = self.veh_to_sens * pos_veh
-			
+
             hx = np.zeros((2, 1))
 
             if pos_sens[0] == 0:

@@ -62,12 +62,12 @@ class Filter:
         # Assuming there is no motion in z axis
         Q = np.matrix(
             [
-                [cu, 0, 0, sq, 0, 0],
-                [0, cu, 0, 0, sq, 0],
-                [0, 0, 0, cu, 0, sq],
-                [sq, 0, 0, lin, 0, 0],
-                [0, sq, 0, 0, lin, 0],
-                [0, 0, 0, sq, 0, lin],
+                [cu, 0,  0,  sq, 0, 0],
+                [0,  cu, 0,  0, sq, 0],
+                [0,  0,  cu, 0, 0, sq],
+                [sq, 0,  0,  lin, 0, 0],
+                [0,  sq, 0,  0, lin, 0],
+                [0,  0,  sq, 0, 0, lin],
             ]
         )
         return Q
@@ -81,7 +81,7 @@ class Filter:
         # TODO Step 1: predict state x and estimation error covariance P to next timestep, save x and P in track
         ############
         x = self.F() * track.x
-        P = self.F() * track.P * self.F().T + self.Q()
+        P = self.F() * track.P * self.F().transpose() + self.Q()
         track.set_x(x)
         track.set_P(P)
         ############
@@ -95,7 +95,7 @@ class Filter:
 
         H = meas.sensor.get_H(track.x)
         S = self.S(track, meas, H)
-        K = track.P * H.T * np.linalg.inv(S)
+        K = track.P * H.transpose() * S.I
         x = track.x + K * self.gamma(track, meas)
         I = np.identity(params.dim_state)
         P = (I - K * H) * track.P

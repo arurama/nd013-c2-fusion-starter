@@ -35,10 +35,10 @@ class Track:
         # - initialize track state and track score with appropriate values
         ############
 
-        Pbase = M_rot * meas.R * np.transpose(M_rot)
-        P0 = Pbase[0, 0]
-        P1 = Pbase[1, 1]
-        P2 = Pbase[2, 2]
+        Ppos = M_rot * meas.R * np.transpose(M_rot)
+        P0 = Ppos[0, 0]
+        P1 = Ppos[1, 1]
+        P2 = Ppos[2, 2]
         P3 = params.sigma_p44**2
         P4 = params.sigma_p55**2
         P5 = params.sigma_p66**2
@@ -109,16 +109,15 @@ class Trackmanagement:
         # decrease score for unassigned tracks
         for i in unassigned_tracks:
             track = self.track_list[i]
-            # check visibility    
+            # visibility    
             if meas_list: # if not empty
                 if meas_list[0].sensor.in_fov(track.x):
                     # your code goes here
                     track.score -= (1.0 / params.window)
         # delete old tracks   
         for track in self.track_list:
-            if (track.state == 'confirmed'):
-                self.delete_track(track)
-            if np.max(track.P[0:2, 0:2]) > params.max_P:
+            if track.state != 'initialized' and track.score < params.delete_threshold \
+                or track.P[0, 0] > params.max_P or track.P[1, 1] > params.max_P:
                 self.delete_track(track)
         ############
         # END student code
@@ -152,7 +151,7 @@ class Trackmanagement:
         track.score += (1.0 / params.window)
         if track.score >= params.confirmed_threshold:
             track.state = 'confirmed'
-        elif track.score  >= params.delete_threshold:
+        else:
             track.state = 'tentative'
         ############
         # END student code

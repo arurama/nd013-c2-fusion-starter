@@ -38,25 +38,19 @@ class Association:
         # - update list of unassigned measurements and unassigned tracks
         ############
         
-        self.association_matrix = np.inf * np.ones((len(track_list), len(meas_list)))
-        self.unassigned_tracks = list(range(len(track_list)))  # reset lists
-        self.unassigned_meas = list(range(len(meas_list)))
+        #self.association_matrix = np.inf * np.ones((len(track_list), len(meas_list)))
+        #self.unassigned_tracks = list(range(len(track_list)))  # reset lists
+        #self.unassigned_meas = list(range(len(meas_list)))
 
+        self.association_matrix = np.ones((len(track_list), len(meas_list))) * np.inf # reset matrix
+        self.unassigned_tracks = list(range(len(track_list))) # reset lists
+        self.unassigned_meas = list(range(len(meas_list)))
         
-        if len(meas_list) > 0:
-            self.unassigned_meas = list(range(len(meas_list)))
-        if len(track_list) > 0:
-            self.unassigned_tracks = list(range(len(track_list)))
-        if len(meas_list) > 0 and len(track_list) > 0: 
-            self.association_matrix =  np.inf * np.ones((len(track_list), len(meas_list)))
-        
-        for i in range(len(track_list)): 
-            track = track_list[i]
-            for j in range(len(meas_list)):
-                meas = meas_list[j]
-                dist = self.MHD(track, meas, KF)
-                if self.gating(dist, meas.sensor):
-                    self.association_matrix[i,j] = dist
+        for tid, tra in enumerate(track_list):
+            for mid, mea in enumerate(meas_list):
+                MHD = self.MHD(tra, mea, KF)
+                if self.gating(MHD, mea.sensor):
+                    self.association_matrix[tid, mid] = MHD     
         ############
         # END student code
         ############ 
